@@ -80,14 +80,14 @@ class HomeController extends Controller
 
         if($search=='')
         {
-            $data = product::paginate(3); 
+            $data = Product::paginate(3); 
 
-           $count=cart::where('phone', $user->phone)->count();
+           $count=Cart::where('phone', $user->phone)->count();
             
             return view ('user.home', compact('data', 'count'));   
         }
         
-        $data=product::where('title', 'Like', '%' .$search. '%')->get();
+        $data=Product::where('title', 'Like', '%' .$search. '%')->get();
 
 
         return view('user.home', compact('data', 'count'));
@@ -98,9 +98,9 @@ class HomeController extends Controller
         if(Auth::id())
         {
             $user=auth()->user();
-            $product=product::find($id);
+            $product=Product::find($id);
 
-            $cart=new cart;
+            $cart=new Cart;
 
             $cart->name=$user->name;
             $cart->phone=$user->phone;
@@ -128,18 +128,18 @@ class HomeController extends Controller
     public function showcart()
     {
 
-        $user=auth()->user();
-        $cart=cart::where('phone', $user->phone)->get();
-        $count=cart::where('phone', $user->phone)->count();
+        $user = auth()->user();
+        $userData = $user;
+        $cart=Cart::where('phone', $user->phone)->get();
+        $count=Cart::where('phone', $user->phone)->count();
         //$numberOfCart = cart::count();
 
-
-        return view('user.showcart', compact('count', 'cart'));
+        return view('user.showcart', ['carts' => $cart, 'count' => $count, 'data' => $userData]);
     }
 
     public function deletecart($id)
     {
-        $data=cart::find($id);
+        $data=Cart::find($id);
         $data->delete();
 
         return redirect()->back()->with('message', 'Product Removed Successfully');
@@ -156,7 +156,7 @@ class HomeController extends Controller
         foreach($request->productname as $key=>$productname)
         {
 
-        $order=new order;
+        $order=new Order;
 
         $order->product_name=$request->productname[$key];
         $order->price=$request->price[$key];
@@ -177,7 +177,16 @@ class HomeController extends Controller
 
 
         return redirect()->back()->with('message', 'Product Ordered Successfully');
-
+           
     }
+
+    public function placeOrder($id)
+    {
+        $user=auth()->user();
+
+
+        return view('user.place-order');
+    }
+    
 }
 

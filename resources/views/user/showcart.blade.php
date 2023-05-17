@@ -120,38 +120,102 @@
 
   @csrf
 
-  @foreach($cart as $carts)
+  @foreach($carts as $cart)
     <tr>
       <td>
 
-      <input type="text" name="productname[]" value="{{$carts->product_title}}" hidden="">
+      <input type="text" name="productname[]" value="{{$cart->product_title}}" hidden="">
         
-      {{$carts->product_title}}
+      {{$cart->product_title}}
     
     </td>
       <td>
 
-      <input type="text" name="quantity[]" value="{{$carts->quantity}}" hidden="">
+      <input type="text" name="quantity[]" value="{{$cart->quantity}}" hidden="">
         
-      {{$carts->quantity}}
+      {{$cart->quantity}}
     
     </td>
       <td>
 
-     <input type="text" name="price[]" value="{{$carts->price}}" hidden="">
+     <input type="text" name="price[]" value="{{$cart->price}}" hidden="">
       
-      {{$carts->price}}
+      {{$cart->price}}
     
     </td>      
-      <td><a class="btn btn-outline-danger  " href="{{url('delete', $carts->id)}}">Delete</a></td>
+      <td><a class="btn btn-outline-danger  " href="{{url('delete', $cart->id)}}">Delete</a></td>
     </tr>
     @endforeach
   </tbody>
 </table>
 
-<button class="btn btn-success">Comfirm Order </button>
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">Confirm Order</button>
 
 </form>
+
+<a href="{{ url('place-order', ['id' => $data]) }}" class="btn btn-success">Place Order</a>
+
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+        <h4 class="modal-title">Place Order</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          
+        </div>
+        <div class="modal-body">
+        <form>
+          <h4 class="border border-secondary">Shipping Information</h4>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputName">Name</label>
+              <input disabled type="name" class="form-control border border-dark" id="name" name="name" placeholder="Name" value="{{$data->name}}">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="inputEmail">Email</label>
+              <input disabled type="email" class="form-control border border-dark" id="email" name="email" placeholder="Email" value="{{$data->email}}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputPhoneNumber">Phone Number</label>
+            <input disabled type="text" class="form-control border border-dark" id="phone-number" name="phone-number" placeholder="Phone number">
+          </div>
+          <div class="form-group">
+            <label for="inputAddress">Address</label>
+            <input disabled type="text" class="form-control border border-dark" id="address" name="address" placeholder="Address">
+          </div>
+          @foreach($carts as $cart)
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputCity">Product Name</label>
+              <input type="text" class="form-control" id="product_name" value="{{$cart->product_title}}">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputCity">Quantity</label>
+              <input type="text" class="form-control" id="quantity" value="{{$cart->quantity}}">
+            </div>
+            <div class="form-group col-md-2">
+              <label for="inputZip">Price</label>
+              <input type="text" class="form-control" id="price" value="{{$cart->price}}">
+            </div>
+        </div>
+        @endforeach
+          <button type="submit" class="btn btn-primary">Sign in</button>
+        </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
 </div>
 
 
